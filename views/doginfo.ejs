@@ -1,0 +1,69 @@
+<%- include('partials/header'); -%>
+
+
+<div class="dog">
+    <h2>Dog Information</h2>
+    <img src="/dog.jpg">
+</div>
+<div>
+    <p>Name: <%= name %></p>
+    <p>Age: <%= age %></p>
+    <p>Breed: <%= breed %></p>
+    <p>Description: <%= description %></p>
+    <p>Adoption Status: <%= adoptionStatus %></p>
+    <% if(adoptionStatus === 'available' && !ownerInfo.equals(user._id)){ %>
+        <button id="adoptdog">Adopt me</button>
+    <%} %>
+    <% if(adoptionStatus === 'available' && ownerInfo.equals(user._id)){ %>
+        <button id="removedog">Remove me</button>
+    <%} %>
+</div>
+<script>
+    const adopt_button = document.getElementById('adoptdog');
+    const remove_button = document.getElementById('removedog');
+    if(adopt_button){
+        adopt_button.addEventListener('click', async () => {
+            const _id = "<%= _id %>";
+            try{
+                const res = await fetch('/adoptdog/<%= _id %>',{
+                    method: 'POST',
+                    headers: {'Content-Length': 0}
+                });
+                const data = await res.json();
+                console.log('data-->',data);
+                if(data.errors){
+                    console.log('error-->', data.errors);
+                }
+                if(data.dog){
+                    console.log('dog-->', data.dog);
+                    location.assign('/dogs/'+data.dog._id);
+                }
+            } catch(err) {
+                console.log('error-->',err);
+            }
+        })
+    }
+    if(remove_button){
+        remove_button.addEventListener('click', async () =>{
+            const _id = "<%= _id %>";
+            try{
+                const res = await fetch('/removedog/<%= _id %>',{
+                    method: 'POST',
+                    headers: {'Content-Length': 0}
+                });
+                const data = await res.json();
+                console.log('data-->',data);
+                if(data.errors){
+                    console.log('error-->', data.errors);
+                }
+                if(data.dog){
+                    console.log('dog-->', data.dog);
+                    location.assign('/');
+                }
+            } catch(err) {
+                console.log('error-->',err);
+            }
+        })
+    }
+</script>
+<%- include('partials/footer'); -%>

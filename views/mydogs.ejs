@@ -1,0 +1,20 @@
+<%- include('partials/header'); -%>
+
+<h2><%= title %></h2>
+<% if(dogs.length > 0){%>
+  <% dogs.forEach(dog => {%>
+  <div class="dog">
+      <img src="/dog.jpg">
+  </div>
+  <div>
+      <p>Name: <a href="/dogs/<%=dog._id%>"><%= dog.name %></a></p>
+      <p>Age: <%= dog.age %></p>
+      <p>Breed: <%= dog.breed %></p>
+      <p>Description: <%= dog.description %></p>
+      <p>Adoption Status: <%= dog.adoptionStatus %></p>
+  </div>
+  <% })%>  
+<% }%>
+
+
+<%- include('partials/footer'); -%>

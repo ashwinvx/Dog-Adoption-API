@@ -1,0 +1,43 @@
+<%- include('partials/header'); -%>
+
+<form>
+    <h2>Register dog</h2>
+    <label for="name">Name</label>
+    <input type="text" name="name" required/>
+    <label for="breed">Breed</label>
+    <input type="text" name="breed" required/>
+    <label for="age">Age</label>
+    <input type="number" name="age" min="0"/>
+    <label for="description">Description</label>
+    <input type="text" name="description" required/>
+    <button>Register</button>
+</form>
+<script>
+    const form = document.querySelector('form');
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        //get the values
+        const name = form.name.value;
+        const breed = form.breed.value;
+        const age = form.age.value;
+        const description = form.description.value;
+        try{
+            const res = await fetch('/registerdogs',{
+                method: 'POST',
+                body: JSON.stringify({name, breed, age, description}),
+                headers: {'Content-Type': 'application/json'}
+            });
+            const data = await res.json();
+            if(data.errors){
+                console.log('error-->', data.errors);
+            }
+            if(data.dog){
+                console.log('data-->',data);
+                location.assign('/dogs/'+data.dog);
+            }
+        } catch(err) {
+            console.log(err);
+        }
+    })
+</script> 
+<%- include('partials/footer'); -%>

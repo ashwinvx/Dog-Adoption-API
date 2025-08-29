@@ -35,6 +35,19 @@ a {
     text-decoration: none;
 }
 
+p a {
+    background-color: burlywood;
+    padding: 0px 10px;
+    border-radius: 5px;
+    text-decoration: none;
+    /* Remove default underline */
+    color: #333;
+}
+
+p a:hover {
+    background-color: #e0e0e0;
+}
+
 nav {
     display: flex;
     justify-content: space-between;
@@ -119,7 +132,7 @@ header {
 }
 
 header img {
-    width: 250px;
+    width: 750px;
     margin-right: 40px;
 }
 
@@ -162,9 +175,8 @@ header .btn {
     padding: 0 20px 30px 20px
 }
 
-.recipe img {
+.dog img {
     width: 100px;
-    margin: -30px auto 20px;
 }
 
 footer {
