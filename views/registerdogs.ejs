@@ -28,9 +28,6 @@
                 headers: {'Content-Type': 'application/json'}
             });
             const data = await res.json();
-            if(data.errors){
-                console.log('error-->', data.errors);
-            }
             if(data.dog){
                 console.log('data-->',data);
                 location.assign('/dogs/'+data.dog);

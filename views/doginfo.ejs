@@ -23,7 +23,6 @@
     const remove_button = document.getElementById('removedog');
     if(adopt_button){
         adopt_button.addEventListener('click', async () => {
-            const _id = "<%= _id %>";
             try{
                 const res = await fetch('/adoptdog/<%= _id %>',{
                     method: 'POST',
@@ -31,9 +30,6 @@
                 });
                 const data = await res.json();
                 console.log('data-->',data);
-                if(data.errors){
-                    console.log('error-->', data.errors);
-                }
                 if(data.dog){
                     console.log('dog-->', data.dog);
                     location.assign('/dogs/'+data.dog._id);
@@ -45,17 +41,14 @@
     }
     if(remove_button){
         remove_button.addEventListener('click', async () =>{
-            const _id = "<%= _id %>";
             try{
+                console.log('remove button pressed');
                 const res = await fetch('/removedog/<%= _id %>',{
                     method: 'POST',
                     headers: {'Content-Length': 0}
                 });
                 const data = await res.json();
                 console.log('data-->',data);
-                if(data.errors){
-                    console.log('error-->', data.errors);
-                }
                 if(data.dog){
                     console.log('dog-->', data.dog);
                     location.assign('/');

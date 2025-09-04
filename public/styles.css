@@ -119,6 +119,11 @@ button {
     letter-spacing: 2px;
 }
 
+button:hover {
+    background-color: yellowgreen;
+    cursor: pointer;
+}
+
 .error {
     color: #ff0099;
     margin: 10px 2px;
