@@ -7,6 +7,7 @@ const { requireAuth, checkUser } = require('./middlewares/authMiddleware');
 const corsMiddleware = require('./cors');
 const limiter = require('./middlewares/ratelimitMiddleware');
 const dotenv = require('dotenv').config();
+const ExpressError = require('./middlewares/expressError');
 
 const app = express();
 
@@ -30,7 +31,22 @@ mongoose.connect(dbURI)
 //routes
 app.get('/{*any}', checkUser);
 app.get('/', (req, res) => res.render('home'));
-app.get('/smoothies', requireAuth, (req, res) => res.render('smoothies'));
 app.use(authRoutes);
-app.use(checkUser, dogRoutes);
+app.use(checkUser, requireAuth, dogRoutes);
 
+/** general error handler */
+
+app.use(function (req, res, next) {
+    const err = new ExpressError("Page Not Found", 404);
+    return next(err);
+});
+
+/** general error handler */
+
+app.use(function (err, req, res, next) {
+    res.status(err.status || 500);
+    return res.json({
+        error: err,
+        message: err.message
+    });
+});

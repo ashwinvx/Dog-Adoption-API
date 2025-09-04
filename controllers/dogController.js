@@ -1,3 +1,4 @@
+const ExpressError = require('../middlewares/expressError');
 const Dog = require('../models/Dog');
 
 module.exports.registerdogs_get = (req, res) => {
@@ -12,8 +13,7 @@ module.exports.registerdogs_post = async (req, res) => {
         const dog = await Dog.create({ name, breed, age, description, ownerInfo });
         res.status(201).json({ dog: dog._id });
     } catch (err) {
-        // const errors = handleErrors(err);
-        // res.status(400).json({ errors });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
 
@@ -48,12 +48,12 @@ module.exports.removedogid_post = async (req, res) => {
             res.status(201).json({ dog: 'deleted' });
         } else {
             console.log('dog not found');
-            return null;
+            res.status(400).json({ error: 'Internal Server Error' });
         }
     }
 }
 
-module.exports.mydogs_get = async (req, res) => {
+module.exports.mydogs_get = async (req, res, next) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
     const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
     const category = req.query.category;
@@ -74,6 +74,8 @@ module.exports.mydogs_get = async (req, res) => {
                 .limit(limit);
             totalDogs = await Dog.countDocuments({ adoptedOwnerInfo: req.userId });
             title = 'My adopted dogs';
+        } else {
+            throw new ExpressError("category not found", 400);
         }
         totalPages = Math.ceil(totalDogs / limit);
         if (dogs) {
@@ -81,6 +83,6 @@ module.exports.mydogs_get = async (req, res) => {
             res.render('mydogs', { title, dogs });
         }
     } catch (error) {
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error)
     }
 }
