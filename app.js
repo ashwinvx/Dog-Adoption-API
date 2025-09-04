@@ -36,17 +36,6 @@ app.use(checkUser, requireAuth, dogRoutes);
 
 /** general error handler */
 
-app.use(function (req, res, next) {
-    const err = new ExpressError("Page Not Found", 404);
-    return next(err);
-});
-
-/** general error handler */
-
-app.use(function (err, req, res, next) {
-    res.status(err.status || 500);
-    return res.json({
-        error: err,
-        message: err.message
-    });
+app.use(function (req, res) {
+    res.status(404).render('404', { title: '404' });
 });

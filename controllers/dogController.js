@@ -1,4 +1,3 @@
-const ExpressError = require('../middlewares/expressError');
 const Dog = require('../models/Dog');
 
 module.exports.registerdogs_get = (req, res) => {
@@ -53,7 +52,7 @@ module.exports.removedogid_post = async (req, res) => {
     }
 }
 
-module.exports.mydogs_get = async (req, res, next) => {
+module.exports.mydogs_get = async (req, res) => {
     const page = parseInt(req.query.page) || 1; // Default to page 1
     const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
     const category = req.query.category;
@@ -74,8 +73,6 @@ module.exports.mydogs_get = async (req, res, next) => {
                 .limit(limit);
             totalDogs = await Dog.countDocuments({ adoptedOwnerInfo: req.userId });
             title = 'My adopted dogs';
-        } else {
-            throw new ExpressError("category not found", 400);
         }
         totalPages = Math.ceil(totalDogs / limit);
         if (dogs) {
