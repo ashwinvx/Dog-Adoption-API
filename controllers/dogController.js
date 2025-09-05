@@ -10,7 +10,7 @@ module.exports.registerdogs_post = async (req, res) => {
     console.log('ownerInfo-->', req.userId);
     try {
         const dog = await Dog.create({ name, breed, age, description, ownerInfo });
-        res.status(201).json({ dog: dog._id });
+        res.status(201).json({ dog });
     } catch (err) {
         res.status(500).json({ error: 'Internal Server Error' });
     }
@@ -53,6 +53,12 @@ module.exports.removedogid_post = async (req, res) => {
 }
 
 module.exports.mydogs_get = async (req, res) => {
+    console.log('dog id-->', req.params.id);
+    const dog = await Dog.findById(req.params.id);
+    if (dog) {
+        console.log('dog-->', dog.toObject());
+        res.render('doginfo', dog.toObject());
+    }
     const page = parseInt(req.query.page) || 1; // Default to page 1
     const limit = parseInt(req.query.limit) || 10; // Default to 10 items per page
     const category = req.query.category;

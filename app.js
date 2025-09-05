@@ -6,10 +6,12 @@ const cookieParser = require('cookie-parser');
 const { requireAuth, checkUser } = require('./middlewares/authMiddleware');
 const corsMiddleware = require('./cors');
 const limiter = require('./middlewares/ratelimitMiddleware');
-const dotenv = require('dotenv').config();
 const ExpressError = require('./middlewares/expressError');
 
 const app = express();
+
+//load configuration from .env file
+require('dotenv-flow').config();
 
 // middleware
 app.use(express.static('public'));
@@ -25,17 +27,19 @@ app.set('view engine', 'ejs');
 //database connection
 const dbURI = process.env.MONGODB_URI;
 mongoose.connect(dbURI)
-    .then(result => app.listen(3000))
+    .then(result => app.listen(process.env.PORT))
     .catch(err => console.log(err));
 
 //routes
 app.get('/{*any}', checkUser);
-app.get('/', (req, res) => res.render('home'));
-app.use(authRoutes);
-app.use(checkUser, requireAuth, dogRoutes);
+app.get('/', (req, res) => res.status(200).render('home'));
+app.use("/api/user", authRoutes);
+app.use("/api/dogs", checkUser, requireAuth, dogRoutes);
 
 /** general error handler */
 
 app.use(function (req, res) {
     res.status(404).render('404', { title: '404' });
 });
+
+module.exports = app;

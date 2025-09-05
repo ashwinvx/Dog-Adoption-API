@@ -13,10 +13,6 @@ const dogSchema = new mongoose.Schema({
         type: Number,
         default: 0, // Default age if not specified
     },
-    // temperament: {
-    //     type: [String], // An array of strings for temperament
-    //     default: [],
-    // },
     description: String,
     adoptionStatus: {
         type: String,
