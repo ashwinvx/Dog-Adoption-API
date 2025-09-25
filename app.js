@@ -33,7 +33,7 @@ mongoose.connect(dbURI)
 //routes
 app.get('/{*any}', checkUser);
 app.get('/', (req, res) => res.status(200).render('home'));
-app.use("/api/user", authRoutes);
+app.use("/api/user", checkUser, authRoutes);
 app.use("/api/dogs", checkUser, requireAuth, dogRoutes);
 
 /** general error handler */

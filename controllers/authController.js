@@ -1,5 +1,7 @@
 const User = require('../models/User');
 const jwt = require('jsonwebtoken');
+//load configuration from .env file
+require('dotenv-flow').config();
 //handle errors
 const handleErrors = err => {
     console.log(err.message, err.code);
@@ -29,7 +31,7 @@ const handleErrors = err => {
 
 const maxAge = 24 * 60 * 60;
 const createToken = id => {
-    return jwt.sign({ id }, 'ninja secret token', {
+    return jwt.sign({ id }, process.env.JWT_SECRET, {
         expiresIn: maxAge
     });
 }
@@ -59,9 +61,11 @@ module.exports.login_post = async (req, res) => {
     const { email, password } = req.body;
     try {
         const user = await User.login(email, password);
+        console.log('user-->', user);
         const token = createToken(user._id);
+        console.log('token-->', token);
         res.cookie('jwt', token, { httpOnly: true, maxAge: maxAge * 1000 });
-        res.status(200).json({ user: user._id });
+        res.status(200).json({ user: user._id, token });
     } catch (err) {
         const errors = handleErrors(err);
         res.status(400).json({ errors });

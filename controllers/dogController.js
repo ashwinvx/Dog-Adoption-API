@@ -21,6 +21,7 @@ module.exports.dogsid_get = async (req, res) => {
     const dog = await Dog.findById(req.params.id);
     if (dog) {
         console.log('dog-->', dog.toObject());
+        res.status(201).json({ dog });
         res.render('doginfo', dog.toObject());
     }
 }
@@ -53,6 +54,7 @@ module.exports.removedogid_post = async (req, res) => {
 }
 
 module.exports.mydogs_get = async (req, res) => {
+    console.log('here in my dogs');
     console.log('dog id-->', req.params.id);
     const dog = await Dog.findById(req.params.id);
     if (dog) {
@@ -83,9 +85,9 @@ module.exports.mydogs_get = async (req, res) => {
         totalPages = Math.ceil(totalDogs / limit);
         if (dogs) {
             console.log('mydogs-->', dogs);
-            res.render('mydogs', { title, dogs });
+            res.status(201).render('mydogs', { title, dogs });
         }
     } catch (error) {
-        next(error)
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 }
